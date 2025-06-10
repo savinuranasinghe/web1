@@ -1,302 +1,278 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>DevCode - Email for Developers</title>
-    <link rel="stylesheet" href="style.css" />
-    <script
-      type="module"
-      src="https://unpkg.com/@splinetool/viewer@1.10.2/build/spline-viewer.js"
-    ></script>
-  </head>
-  <body>
-    <!-- Circuit Board Pattern Canvas Background -->
-    <canvas id="matrix-rain"></canvas>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MCODE - Email for Developers</title>
+  <link rel="stylesheet" href="style.css" />
+  <script type="module" src="https://unpkg.com/@splinetool/viewer@1.10.2/build/spline-viewer.js"></script>
+</head>
+<body>
+  <!-- Circuit Board Pattern Canvas Background -->
+  <canvas id="matrix-rain"></canvas>
 
-    <header class="navbar">
-      <div class="logo">DevCode</div>
-      <nav>
-        <ul class="nav-links">
-          <li><a href="#">Company</a></li>
-          <li><a href="#">Features</a></li>
-          <li><a href="#">Resources</a></li>
-          <li><a href="#">Docs</a></li>
-        </ul>
-      </nav>
-      <button class="signing-btn">SIGNING</button>
-    </header>
+  <header class="navbar">
+    <div class="logo">DevCode</div>
+    <nav>
+      <ul class="nav-links">
+        <li><a href="#">Company</a></li>
+        <li><a href="#">Features</a></li>
+        <li><a href="#">Resources</a></li>
+        <li><a href="#">Docs</a></li>
+      </ul>
+    </nav>
+    <button class="signing-btn">SIGNING</button>
+  </header>
 
-    <main class="hero">
-      <div class="hero-content">
-        <button class="intro-btn">INTRODUCING △</button>
-        <h1>EMAIL FOR<br />DEVELOPERS</h1>
-        <p>
-          THE BEST WAY TO REACH HUMANS INSTEAD OF SPAM FOLDERS.<br />
-          DELIVER TRANSACTIONAL AND MARKETING EMAILS AT SCALE.
-        </p>
-        <div class="cta-buttons">
-          <a href="#" class="btn dark">Documentation </a>
-          <a href="#" class="btn light">Get started </a>
-        </div>
+  <main class="hero">
+    <div class="hero-content">
+      <button class="intro-btn">INTRODUCING △</button>
+      <h1>EMAIL FOR<br />DEVELOPERS</h1>
+      <p>
+        THE BEST WAY TO REACH HUMANS INSTEAD OF SPAM FOLDERS.<br />
+        DELIVER TRANSACTIONAL AND MARKETING EMAILS AT SCALE.
+      </p>
+      <div class="cta-buttons">
+        <a href="#" class="btn dark">Documentation </a>
+        <a href="#" class="btn light">Get started </a>
       </div>
+    </div>
 
-      <div class="hero-visual">
-        <div class="spline-container">
-          <spline-viewer
-            class="spline-viewer"
-            class="spline-full"
-            url="https://prod.spline.design/tLYsQo-rQ7T9gbbb/scene.splinecode"
-            events-target="none"
-            disable-zoom="true"
-            disable-pan="true"
-            disable-rotation="true"
-          ></spline-viewer>
-          <div class="interaction-blocker"></div>
-        </div>
+    <div class="hero-visual">
+      <div class="spline-container">
+        <spline-viewer 
+         class="spline-viewer"
+          class="spline-full" 
+          url="https://prod.spline.design/tLYsQo-rQ7T9gbbb/scene.splinecode"
+          events-target="none"
+          disable-zoom="true"
+          disable-pan="true"
+          disable-rotation="true"></spline-viewer>
+        <div class="interaction-blocker"></div>
       </div>
-    </main>
+    </div>
+  </main>
 
-    <script>
-      // Circuit Board Pattern Effect
-      const canvas = document.getElementById("matrix-rain");
-      const ctx = canvas.getContext("2d");
+  <script>
+    // Circuit Board Pattern Effect
+    const canvas = document.getElementById('matrix-rain');
+    const ctx = canvas.getContext('2d');
 
-      // Set canvas size
-      function resizeCanvas() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-      }
-      resizeCanvas();
-      window.addEventListener("resize", resizeCanvas);
+    // Set canvas size
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
 
-      // Circuit board elements
-      const circuits = [];
-      const nodes = [];
-      const maxCircuits = 25;
-      const maxNodes = 15;
+    // Circuit board elements
+    const circuits = [];
+    const nodes = [];
+    const maxCircuits = 25;
+    const maxNodes = 15;
 
-      // Initialize circuit lines
-      function initCircuits() {
-        circuits.length = 0;
-        nodes.length = 0;
+    // Initialize circuit lines
+    function initCircuits() {
+      circuits.length = 0;
+      nodes.length = 0;
 
-        // Create horizontal and vertical circuit lines
-        for (let i = 0; i < maxCircuits; i++) {
-          const isHorizontal = Math.random() > 0.5;
-
-          if (isHorizontal) {
-            circuits.push({
-              type: "horizontal",
-              x1: Math.random() * canvas.width * 0.3,
-              y1: Math.random() * canvas.height,
-              x2: Math.random() * canvas.width * 0.7 + canvas.width * 0.3,
-              y2: Math.random() * canvas.height,
-              opacity: Math.random() * 0.3 + 0.1,
-              baseOpacity: Math.random() * 0.3 + 0.1,
-              lightUpTime: 0,
-              isLit: false,
-              lastLightUp: 0,
-            });
-          } else {
-            circuits.push({
-              type: "vertical",
-              x1: Math.random() * canvas.width,
-              y1: Math.random() * canvas.height * 0.3,
-              x2: Math.random() * canvas.width,
-              y2: Math.random() * canvas.height * 0.7 + canvas.height * 0.3,
-              opacity: Math.random() * 0.3 + 0.1,
-              baseOpacity: Math.random() * 0.3 + 0.1,
-              lightUpTime: 0,
-              isLit: false,
-              lastLightUp: 0,
-            });
-          }
-        }
-
-        // Create circuit nodes (connection points)
-        for (let i = 0; i < maxNodes; i++) {
-          nodes.push({
-            x: Math.random() * canvas.width,
-            y: Math.random() * canvas.height,
-            size: Math.random() * 4 + 2,
-            opacity: Math.random() * 0.4 + 0.2,
-            baseOpacity: Math.random() * 0.4 + 0.2,
-            pulse: Math.random() * Math.PI * 2,
-            pulseSpeed: 0.02,
+      // Create horizontal and vertical circuit lines
+      for (let i = 0; i < maxCircuits; i++) {
+        const isHorizontal = Math.random() > 0.5;
+        
+        if (isHorizontal) {
+          circuits.push({
+            type: 'horizontal',
+            x1: Math.random() * canvas.width * 0.3,
+            y1: Math.random() * canvas.height,
+            x2: Math.random() * canvas.width * 0.7 + canvas.width * 0.3,
+            y2: Math.random() * canvas.height,
+            opacity: Math.random() * 0.3 + 0.1,
+            baseOpacity: Math.random() * 0.3 + 0.1,
             lightUpTime: 0,
             isLit: false,
-            lastLightUp: 0,
+            lastLightUp: 0
+          });
+        } else {
+          circuits.push({
+            type: 'vertical',
+            x1: Math.random() * canvas.width,
+            y1: Math.random() * canvas.height * 0.3,
+            x2: Math.random() * canvas.width,
+            y2: Math.random() * canvas.height * 0.7 + canvas.height * 0.3,
+            opacity: Math.random() * 0.3 + 0.1,
+            baseOpacity: Math.random() * 0.3 + 0.1,
+            lightUpTime: 0,
+            isLit: false,
+            lastLightUp: 0
           });
         }
       }
 
-      function drawCircuitLine(circuit) {
-        const currentTime = Date.now();
+      // Create circuit nodes (connection points)
+      for (let i = 0; i < maxNodes; i++) {
+        nodes.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          size: Math.random() * 4 + 2,
+          opacity: Math.random() * 0.4 + 0.2,
+          baseOpacity: Math.random() * 0.4 + 0.2,
+          pulse: Math.random() * Math.PI * 2,
+          pulseSpeed: 0.02,
+          lightUpTime: 0,
+          isLit: false,
+          lastLightUp: 0
+        });
+      }
+    }
 
-        // Random light up effect
-        if (
-          !circuit.isLit &&
-          currentTime - circuit.lastLightUp > 3000 &&
-          Math.random() > 0.998
-        ) {
-          circuit.isLit = true;
-          circuit.lightUpTime = currentTime;
-          circuit.lastLightUp = currentTime;
-        }
+    function drawCircuitLine(circuit) {
+      const currentTime = Date.now();
+      
+      // Random light up effect
+      if (!circuit.isLit && currentTime - circuit.lastLightUp > 3000 && Math.random() > 0.998) {
+        circuit.isLit = true;
+        circuit.lightUpTime = currentTime;
+        circuit.lastLightUp = currentTime;
+      }
 
-        // Handle light up duration
-        if (circuit.isLit && currentTime - circuit.lightUpTime > 800) {
-          circuit.isLit = false;
-        }
+      // Handle light up duration
+      if (circuit.isLit && currentTime - circuit.lightUpTime > 800) {
+        circuit.isLit = false;
+      }
 
-        // Set opacity based on light up state
-        if (circuit.isLit) {
-          const progress = (currentTime - circuit.lightUpTime) / 800;
-          const intensity = Math.sin(progress * Math.PI) * 0.8;
-          circuit.opacity = circuit.baseOpacity + intensity;
-        } else {
-          circuit.opacity = circuit.baseOpacity;
-        }
+      // Set opacity based on light up state
+      if (circuit.isLit) {
+        const progress = (currentTime - circuit.lightUpTime) / 800;
+        const intensity = Math.sin(progress * Math.PI) * 0.8;
+        circuit.opacity = circuit.baseOpacity + intensity;
+      } else {
+        circuit.opacity = circuit.baseOpacity;
+      }
 
-        // Draw the circuit line
+      // Draw the circuit line
+      ctx.beginPath();
+      ctx.moveTo(circuit.x1, circuit.y1);
+      ctx.lineTo(circuit.x2, circuit.y2);
+      ctx.strokeStyle = `rgba(139, 92, 246, ${circuit.opacity})`;
+      ctx.lineWidth = circuit.isLit ? 2 : 1;
+      ctx.stroke();
+
+      // Add glow effect when lit
+      if (circuit.isLit) {
+        ctx.shadowColor = '#8b5cf6';
+        ctx.shadowBlur = 8;
         ctx.beginPath();
         ctx.moveTo(circuit.x1, circuit.y1);
         ctx.lineTo(circuit.x2, circuit.y2);
-        ctx.strokeStyle = `rgba(139, 92, 246, ${circuit.opacity})`;
-        ctx.lineWidth = circuit.isLit ? 2 : 1;
+        ctx.strokeStyle = `rgba(139, 92, 246, ${circuit.opacity * 0.5})`;
+        ctx.lineWidth = 3;
         ctx.stroke();
+        ctx.shadowBlur = 0;
+      }
+    }
 
-        // Add glow effect when lit
-        if (circuit.isLit) {
-          ctx.shadowColor = "#8b5cf6";
-          ctx.shadowBlur = 8;
-          ctx.beginPath();
-          ctx.moveTo(circuit.x1, circuit.y1);
-          ctx.lineTo(circuit.x2, circuit.y2);
-          ctx.strokeStyle = `rgba(139, 92, 246, ${circuit.opacity * 0.5})`;
-          ctx.lineWidth = 3;
-          ctx.stroke();
-          ctx.shadowBlur = 0;
-        }
+    function drawCircuitNode(node) {
+      const currentTime = Date.now();
+      
+      // Random light up effect
+      if (!node.isLit && currentTime - node.lastLightUp > 2000 && Math.random() > 0.997) {
+        node.isLit = true;
+        node.lightUpTime = currentTime;
+        node.lastLightUp = currentTime;
       }
 
-      function drawCircuitNode(node) {
-        const currentTime = Date.now();
+      // Handle light up duration
+      if (node.isLit && currentTime - node.lightUpTime > 600) {
+        node.isLit = false;
+      }
 
-        // Random light up effect
-        if (
-          !node.isLit &&
-          currentTime - node.lastLightUp > 2000 &&
-          Math.random() > 0.997
-        ) {
-          node.isLit = true;
-          node.lightUpTime = currentTime;
-          node.lastLightUp = currentTime;
-        }
+      // Update pulse
+      node.pulse += node.pulseSpeed;
+      const pulseFactor = Math.sin(node.pulse) * 0.1 + 1;
 
-        // Handle light up duration
-        if (node.isLit && currentTime - node.lightUpTime > 600) {
-          node.isLit = false;
-        }
+      // Set opacity based on light up state
+      if (node.isLit) {
+        const progress = (currentTime - node.lightUpTime) / 600;
+        const intensity = Math.sin(progress * Math.PI) * 0.6;
+        node.opacity = (node.baseOpacity + intensity) * pulseFactor;
+      } else {
+        node.opacity = node.baseOpacity * pulseFactor;
+      }
 
-        // Update pulse
-        node.pulse += node.pulseSpeed;
-        const pulseFactor = Math.sin(node.pulse) * 0.1 + 1;
+      // Draw the node
+      ctx.beginPath();
+      ctx.arc(node.x, node.y, node.size, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(139, 92, 246, ${node.opacity})`;
+      ctx.fill();
 
-        // Set opacity based on light up state
-        if (node.isLit) {
-          const progress = (currentTime - node.lightUpTime) / 600;
-          const intensity = Math.sin(progress * Math.PI) * 0.6;
-          node.opacity = (node.baseOpacity + intensity) * pulseFactor;
-        } else {
-          node.opacity = node.baseOpacity * pulseFactor;
-        }
-
-        // Draw the node
+      // Add glow effect when lit
+      if (node.isLit) {
+        ctx.shadowColor = '#8b5cf6';
+        ctx.shadowBlur = 10;
         ctx.beginPath();
-        ctx.arc(node.x, node.y, node.size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(139, 92, 246, ${node.opacity})`;
+        ctx.arc(node.x, node.y, node.size + 2, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(139, 92, 246, ${node.opacity * 0.3})`;
         ctx.fill();
-
-        // Add glow effect when lit
-        if (node.isLit) {
-          ctx.shadowColor = "#8b5cf6";
-          ctx.shadowBlur = 10;
-          ctx.beginPath();
-          ctx.arc(node.x, node.y, node.size + 2, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(139, 92, 246, ${node.opacity * 0.3})`;
-          ctx.fill();
-          ctx.shadowBlur = 0;
-        }
+        ctx.shadowBlur = 0;
       }
+    }
 
-      function updateCircuitBoard() {
-        // Clear canvas with black background
-        ctx.fillStyle = "#000000";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+    function updateCircuitBoard() {
+      // Clear canvas with black background
+      ctx.fillStyle = '#000000';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        // Draw circuit lines
-        circuits.forEach((circuit) => {
-          drawCircuitLine(circuit);
-        });
+      // Draw circuit lines
+      circuits.forEach(circuit => {
+        drawCircuitLine(circuit);
+      });
 
-        // Draw circuit nodes
-        nodes.forEach((node) => {
-          drawCircuitNode(node);
-        });
-      }
+      // Draw circuit nodes
+      nodes.forEach(node => {
+        drawCircuitNode(node);
+      });
+    }
 
-      // Animation loop
-      function animate() {
-        updateCircuitBoard();
-        requestAnimationFrame(animate);
-      }
+    // Animation loop
+    function animate() {
+      updateCircuitBoard();
+      requestAnimationFrame(animate);
+    }
 
-      // Initialize and start
+    // Initialize and start
+    initCircuits();
+    animate();
+
+    // Update on window resize
+    window.addEventListener('resize', () => {
+      resizeCanvas();
       initCircuits();
-      animate();
+    });
 
-      // Update on window resize
-      window.addEventListener("resize", () => {
-        resizeCanvas();
-        initCircuits();
-      });
-
-      // Prevent scrolling on the Spline viewer area
-      document.addEventListener("DOMContentLoaded", function () {
-        const splineContainer = document.querySelector(".spline-container");
-        const interactionBlocker = document.querySelector(
-          ".interaction-blocker"
-        );
-
-        if (splineContainer && interactionBlocker) {
-          // Block all mouse events on the container
-          ["wheel", "mousewheel", "DOMMouseScroll", "scroll"].forEach(
-            (event) => {
-              splineContainer.addEventListener(
-                event,
-                function (e) {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  return false;
-                },
-                { passive: false }
-              );
-
-              interactionBlocker.addEventListener(
-                event,
-                function (e) {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  return false;
-                },
-                { passive: false }
-              );
-            }
-          );
-        }
-      });
-    </script>
-  </body>
+    // Prevent scrolling on the Spline viewer area
+    document.addEventListener('DOMContentLoaded', function() {
+      const splineContainer = document.querySelector('.spline-container');
+      const interactionBlocker = document.querySelector('.interaction-blocker');
+      
+      if (splineContainer && interactionBlocker) {
+        // Block all mouse events on the container
+        ['wheel', 'mousewheel', 'DOMMouseScroll', 'scroll'].forEach(event => {
+          splineContainer.addEventListener(event, function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+          }, { passive: false });
+          
+          interactionBlocker.addEventListener(event, function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+          }, { passive: false });
+        });
+      }
+    });
+  </script>
+</body>
 </html>
