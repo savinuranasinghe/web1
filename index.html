@@ -8,11 +8,11 @@
   <script type="module" src="https://unpkg.com/@splinetool/viewer@1.10.2/build/spline-viewer.js"></script>
 </head>
 <body>
-  <!-- Matrix Rain Canvas Background -->
+  <!-- Floating Purple Shapes Canvas Background -->
   <canvas id="matrix-rain"></canvas>
 
   <header class="navbar">
-    <div class="logo">MCODE</div>
+    <div class="logo">DevCode</div>
     <nav>
       <ul class="nav-links">
         <li><a href="#">Company</a></li>
@@ -39,15 +39,22 @@
     </div>
 
     <div class="hero-visual">
-      <spline-viewer 
-       class="spline-viewer"
-        class="spline-full" 
-      url="https://prod.spline.design/tLYsQo-rQ7T9gbbb/scene.splinecode"></spline-viewer>
+      <div class="spline-container">
+        <spline-viewer 
+         class="spline-viewer"
+          class="spline-full" 
+          url="https://prod.spline.design/tLYsQo-rQ7T9gbbb/scene.splinecode"
+          events-target="none"
+          disable-zoom="true"
+          disable-pan="true"
+          disable-rotation="true"></spline-viewer>
+        <div class="interaction-blocker"></div>
+      </div>
     </div>
   </main>
 
   <script>
-    // Matrix Rain Effect
+    // Floating Purple Shapes Effect
     const canvas = document.getElementById('matrix-rain');
     const ctx = canvas.getContext('2d');
 
@@ -59,92 +66,146 @@
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
 
-    // Matrix characters - mix of code symbols and Japanese characters
-    const matrixChars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン<>{}[]()';
-    const chars = matrixChars.split('');
+    // Floating shapes array
+    const shapes = [];
+    const maxShapes = 15; // Number of shapes on screen
 
-    // Rain drops
-    const drops = [];
-    const fontSize = 14;
-    let columns = Math.floor(canvas.width / fontSize);
+    // Shape types
+    const shapeTypes = ['triangle', 'hexagon'];
 
-    // Initialize drops
-    function initDrops() {
-      columns = Math.floor(canvas.width / fontSize);
-      drops.length = 0;
-      for (let i = 0; i < columns; i++) {
-        drops[i] = {
-          y: Math.random() * canvas.height,
-          speed: Math.random() * 2 + 0.5,
-          char: chars[Math.floor(Math.random() * chars.length)],
-          opacity: Math.random() * 0.3 + 0.1
-        };
+    // Initialize shapes
+    function initShapes() {
+      shapes.length = 0;
+      for (let i = 0; i < maxShapes; i++) {
+        shapes.push(createShape());
       }
     }
-    initDrops();
 
-    function drawMatrix() {
-      // Create fade effect
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.04)';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+    function createShape() {
+      return {
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        size: Math.random() * 60 + 20, // Size between 20-80
+        type: shapeTypes[Math.floor(Math.random() * shapeTypes.length)],
+        speedX: (Math.random() - 0.5) * 0.5, // Slow horizontal drift
+        speedY: (Math.random() - 0.5) * 0.5, // Slow vertical drift
+        rotation: Math.random() * Math.PI * 2,
+        rotationSpeed: (Math.random() - 0.5) * 0.01,
+        opacity: Math.random() * 0.3 + 0.1, // Very transparent
+        pulse: Math.random() * Math.PI * 2,
+        pulseSpeed: 0.02
+      };
+    }
 
-      // Draw characters
-      ctx.font = fontSize + 'px monospace';
-      
-      for (let i = 0; i < drops.length; i++) {
-        const drop = drops[i];
-        const x = i * fontSize;
-        
-        // Create purple gradient
-        const gradient = ctx.createLinearGradient(0, drop.y - 80, 0, drop.y + 80);
-        gradient.addColorStop(0, `rgba(139, 92, 246, 0)`);
-        gradient.addColorStop(0.5, `rgba(139, 92, 246, ${drop.opacity})`);
-        gradient.addColorStop(1, `rgba(74, 14, 78, ${drop.opacity * 0.2})`);
-        
-        ctx.fillStyle = gradient;
-        ctx.fillText(drop.char, x, drop.y);
+    function drawTriangle(x, y, size, rotation, opacity) {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(rotation);
+      ctx.beginPath();
+      ctx.moveTo(0, -size/2);
+      ctx.lineTo(-size/2, size/2);
+      ctx.lineTo(size/2, size/2);
+      ctx.closePath();
+      ctx.fillStyle = `rgba(139, 92, 246, ${opacity})`;
+      ctx.fill();
+      ctx.strokeStyle = `rgba(139, 92, 246, ${opacity * 0.5})`;
+      ctx.lineWidth = 1;
+      ctx.stroke();
+      ctx.restore();
+    }
 
-        // Add occasional bright glow
-        if (Math.random() > 0.98) {
-          ctx.shadowColor = '#8b5cf6';
-          ctx.shadowBlur = 15;
-          ctx.fillStyle = `rgba(139, 92, 246, ${Math.min(drop.opacity + 0.4, 0.8)})`;
-          ctx.fillText(drop.char, x, drop.y);
-          ctx.shadowBlur = 0;
-        }
-
-        // Move drop down
-        drop.y += drop.speed;
-
-        // Reset drop when it goes off screen
-        if (drop.y > canvas.height + 50) {
-          drops[i] = {
-            y: -fontSize,
-            speed: Math.random() * 2 + 0.5,
-            char: chars[Math.floor(Math.random() * chars.length)],
-            opacity: Math.random() * 0.3 + 0.1
-          };
-        }
-
-        // Randomly change character
-        if (Math.random() > 0.96) {
-          drop.char = chars[Math.floor(Math.random() * chars.length)];
+    function drawHexagon(x, y, size, rotation, opacity) {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(rotation);
+      ctx.beginPath();
+      for (let i = 0; i < 6; i++) {
+        const angle = (i * Math.PI) / 3;
+        const hx = Math.cos(angle) * size/2;
+        const hy = Math.sin(angle) * size/2;
+        if (i === 0) {
+          ctx.moveTo(hx, hy);
+        } else {
+          ctx.lineTo(hx, hy);
         }
       }
+      ctx.closePath();
+      ctx.fillStyle = `rgba(139, 92, 246, ${opacity})`;
+      ctx.fill();
+      ctx.strokeStyle = `rgba(139, 92, 246, ${opacity * 0.5})`;
+      ctx.lineWidth = 1;
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    function updateShapes() {
+      // Clear canvas with black background
+      ctx.fillStyle = '#000000';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      shapes.forEach((shape, index) => {
+        // Update position
+        shape.x += shape.speedX;
+        shape.y += shape.speedY;
+        shape.rotation += shape.rotationSpeed;
+        shape.pulse += shape.pulseSpeed;
+
+        // Add subtle pulsing effect
+        const pulseFactor = Math.sin(shape.pulse) * 0.1 + 1;
+        const currentOpacity = shape.opacity * pulseFactor;
+
+        // Wrap around screen edges
+        if (shape.x < -shape.size) shape.x = canvas.width + shape.size;
+        if (shape.x > canvas.width + shape.size) shape.x = -shape.size;
+        if (shape.y < -shape.size) shape.y = canvas.height + shape.size;
+        if (shape.y > canvas.height + shape.size) shape.y = -shape.size;
+
+        // Draw shape
+        if (shape.type === 'triangle') {
+          drawTriangle(shape.x, shape.y, shape.size, shape.rotation, currentOpacity);
+        } else {
+          drawHexagon(shape.x, shape.y, shape.size, shape.rotation, currentOpacity);
+        }
+      });
     }
 
     // Animation loop
     function animate() {
-      drawMatrix();
+      updateShapes();
       requestAnimationFrame(animate);
     }
 
+    // Initialize and start
+    initShapes();
     animate();
 
     // Update on window resize
     window.addEventListener('resize', () => {
       resizeCanvas();
-      initDrops();
+      initShapes();
+    });
+
+    // Prevent scrolling on the Spline viewer area
+    document.addEventListener('DOMContentLoaded', function() {
+      const splineContainer = document.querySelector('.spline-container');
+      const interactionBlocker = document.querySelector('.interaction-blocker');
+      
+      if (splineContainer && interactionBlocker) {
+        // Block all mouse events on the container
+        ['wheel', 'mousewheel', 'DOMMouseScroll', 'scroll'].forEach(event => {
+          splineContainer.addEventListener(event, function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+          }, { passive: false });
+          
+          interactionBlocker.addEventListener(event, function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+          }, { passive: false });
+        });
+      }
     });
   </script>
 </body>
