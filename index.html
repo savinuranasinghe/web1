@@ -8,6 +8,9 @@
   <script type="module" src="https://unpkg.com/@splinetool/viewer@1.10.2/build/spline-viewer.js"></script>
 </head>
 <body>
+  <!-- Matrix Rain Canvas Background -->
+  <canvas id="matrix-rain"></canvas>
+
   <header class="navbar">
     <div class="logo">MCODE</div>
     <nav>
@@ -36,14 +39,113 @@
     </div>
 
     <div class="hero-visual">
-      
-          <spline-viewer 
-           class="spline-viewer"
-            class="spline-full" 
-          url="https://prod.spline.design/tLYsQo-rQ7T9gbbb/scene.splinecode"></spline-viewer>
-      
+      <spline-viewer 
+       class="spline-viewer"
+        class="spline-full" 
+      url="https://prod.spline.design/tLYsQo-rQ7T9gbbb/scene.splinecode"></spline-viewer>
     </div>
   </main>
+
+  <script>
+    // Matrix Rain Effect
+    const canvas = document.getElementById('matrix-rain');
+    const ctx = canvas.getContext('2d');
+
+    // Set canvas size
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    // Matrix characters - mix of code symbols and Japanese characters
+    const matrixChars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン<>{}[]()';
+    const chars = matrixChars.split('');
+
+    // Rain drops
+    const drops = [];
+    const fontSize = 14;
+    let columns = Math.floor(canvas.width / fontSize);
+
+    // Initialize drops
+    function initDrops() {
+      columns = Math.floor(canvas.width / fontSize);
+      drops.length = 0;
+      for (let i = 0; i < columns; i++) {
+        drops[i] = {
+          y: Math.random() * canvas.height,
+          speed: Math.random() * 2 + 0.5,
+          char: chars[Math.floor(Math.random() * chars.length)],
+          opacity: Math.random() * 0.3 + 0.1
+        };
+      }
+    }
+    initDrops();
+
+    function drawMatrix() {
+      // Create fade effect
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.04)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Draw characters
+      ctx.font = fontSize + 'px monospace';
+      
+      for (let i = 0; i < drops.length; i++) {
+        const drop = drops[i];
+        const x = i * fontSize;
+        
+        // Create purple gradient
+        const gradient = ctx.createLinearGradient(0, drop.y - 80, 0, drop.y + 80);
+        gradient.addColorStop(0, `rgba(139, 92, 246, 0)`);
+        gradient.addColorStop(0.5, `rgba(139, 92, 246, ${drop.opacity})`);
+        gradient.addColorStop(1, `rgba(74, 14, 78, ${drop.opacity * 0.2})`);
+        
+        ctx.fillStyle = gradient;
+        ctx.fillText(drop.char, x, drop.y);
+
+        // Add occasional bright glow
+        if (Math.random() > 0.98) {
+          ctx.shadowColor = '#8b5cf6';
+          ctx.shadowBlur = 15;
+          ctx.fillStyle = `rgba(139, 92, 246, ${Math.min(drop.opacity + 0.4, 0.8)})`;
+          ctx.fillText(drop.char, x, drop.y);
+          ctx.shadowBlur = 0;
+        }
+
+        // Move drop down
+        drop.y += drop.speed;
+
+        // Reset drop when it goes off screen
+        if (drop.y > canvas.height + 50) {
+          drops[i] = {
+            y: -fontSize,
+            speed: Math.random() * 2 + 0.5,
+            char: chars[Math.floor(Math.random() * chars.length)],
+            opacity: Math.random() * 0.3 + 0.1
+          };
+        }
+
+        // Randomly change character
+        if (Math.random() > 0.96) {
+          drop.char = chars[Math.floor(Math.random() * chars.length)];
+        }
+      }
+    }
+
+    // Animation loop
+    function animate() {
+      drawMatrix();
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+
+    // Update on window resize
+    window.addEventListener('resize', () => {
+      resizeCanvas();
+      initDrops();
+    });
+  </script>
 </body>
 </html>
-
